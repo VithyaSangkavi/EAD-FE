@@ -1,0 +1,62 @@
+.full-screen {
+    height: 100vh;        
+    width: 100vw;          
+    display: flex;       
+    justify-content: center;
+    align-items: center; 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    overflow: hidden;      
+    background-color: #f8f9fa; 
+}
+
+.header {
+    font-size: 6.5rem;
+    color: #6f42c1;
+}
+
+.custom-button {
+    border-color: black !important;
+    color: black !important;      
+}
+
+.custom-button:hover {
+    background-color: rgba(0, 0, 0, 0.1); 
+}
+
+.nthsmall-one {
+    font-size: 5.5rem;
+    color: #0dcaf0;
+}
+
+.nthsmall-two {
+    font-size: 4rem;
+    color: #000;
+}
+
+.small-heading {
+    font-size: 2rem;
+    color: #000;
+}
+
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+.fadeInDown {
+    animation-name: fadeInDown;
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

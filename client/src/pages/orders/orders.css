@@ -1,0 +1,7 @@
+.custom-close-button {
+    color: black;
+}
+
+.custom-close-button:hover {
+    color: red !important; 
+}

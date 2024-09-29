@@ -1,0 +1,15 @@
+/* admin-header.css */
+
+.custom-navbar .nav-link {
+    color: white; /* Default text color */
+    transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+.custom-navbar .nav-link:hover {
+    color: black; 
+}
+
+.custom-navbar .nav-link.active {
+    color: black; /* Color when link is selected (active) */
+    font-weight: bold; /* Make active link bold */
+}

@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LandingPage from '../src/pages/landing-page';
 import './App.css'
+import './index.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import SignupPage from '../src/pages/signup-page';
+import LoginPage from './pages/login-page';
+import DisplayProducts from './pages/products/display-products';
+import AddProducts from './pages/products/add-products';
+import ViewProducts from './pages/products/view-product';
+import DisplayVendors from './pages/vendors/display-vendors';
+import AddVendors from './pages/vendors/add-vendors';
+import UpdateVendor from './pages/vendors/update-vendors';
+import CustomerOrders from './pages/orders/display-orders';
+import ViewOrder from './pages/orders/view-order';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/displayProducts" element={<DisplayProducts />} />
+        <Route path="/addProducts" element={<AddProducts />} />
+        <Route path="/viewProduct" element={<ViewProducts />} />
+        <Route path="/displayVendors" element={<DisplayVendors />} />
+        <Route path="/addVendors" element={<AddVendors />} />
+        <Route path="/updateVendor" element={<UpdateVendor />} />
+        <Route path="/customerOrders" element={<CustomerOrders />} />
+        <Route path="/viewOrder" element={<ViewOrder />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App

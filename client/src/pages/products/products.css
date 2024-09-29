@@ -1,0 +1,14 @@
+.top-right-button {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    z-index: 1000; 
+  }
+
+  .form-heading{
+    background-color: #f8f2fc;
+    color: black;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  

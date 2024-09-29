@@ -1,0 +1,13 @@
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling on smaller screens */
+}
+
+.w-100 {
+    width: 100% !important; /* Forces the table to take full width */
+}
+
+.full-height {
+    height: 100vh; /* Adjust as necessary */
+    width: 100%;
+}

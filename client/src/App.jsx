@@ -14,6 +14,7 @@ import AddVendors from './pages/vendors/add-vendors';
 import UpdateVendor from './pages/vendors/update-vendors';
 import CustomerOrders from './pages/orders/display-orders';
 import ViewOrder from './pages/orders/view-order';
+import DisplayProductCategories from './pages/categories/display-categories';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/updateVendor" element={<UpdateVendor />} />
         <Route path="/customerOrders" element={<CustomerOrders />} />
         <Route path="/viewOrder" element={<ViewOrder />} />
+        <Route path="/displayCategories" element={<DisplayProductCategories />} />
       </Routes>
     </Router>
   );

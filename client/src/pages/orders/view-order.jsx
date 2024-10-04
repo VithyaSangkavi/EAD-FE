@@ -11,11 +11,13 @@ import {
     MDBCardBody,
     MDBCardImage,
 } from 'mdb-react-ui-kit';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import productHolder from '../../assets/order-pic.jpg';
 import './orders.css'
 
 function ViewOrder() {
+    const location = useLocation(); // Get location object
+    const order = location.state?.order;
     const navigate = useNavigate();
     const [orderStatus, setOrderStatus] = useState('Pending'); // Initial order status
 
@@ -53,16 +55,34 @@ function ViewOrder() {
                                 </MDBCol>
 
                                 <MDBCol md='6'>
-                                    <h4>Order Details</h4>
-                                    <br />
-                                    <h6>Customer ID: </h6>
-                                    <h6>Customer Name: </h6>
-                                    <h6>Customer ID: </h6>
+                                    <div>
 
-                                    <h6>Product Name: </h6>
-                                    <h6>Product Quantity: </h6>
-                                    <h6>Total Amount: </h6>
-                                    <h6>Order Status: </h6>
+                                        <h5>Items:</h5>
+                                        <ul>
+                                            {order.items.map((item) => (
+                                                <li key={item.productId}>
+                                                    {item.productName} - Quantity: {item.quantity}, Price: {item.price}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <p>User Email: {order.checkoutUuid}</p>
+                                        <p>ID: {order.id}</p>
+                                        <p>Checkout ID: {order.paymentStatus}</p>
+                                        <p>
+                                            Created Date: {
+                                                new Date(order.createdAt).toLocaleString('en-US', {
+                                                    year: 'numeric',
+                                                    month: '2-digit',
+                                                    day: '2-digit',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                    hour12: true,
+                                                })
+                                            }
+                                        </p>
+                                        <p>Purchase Status: {order.purchaseStatus}</p>
+                                        <p>Payment Status: {order.paymentStatus}</p>
+                                    </div>
 
                                     <h5>-----------------------------------------------</h5>
 

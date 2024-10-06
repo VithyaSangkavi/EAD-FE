@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from '../src/pages/landing-page';
-import './App.css'
-import './index.css'
+import './App.css';
+import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SignupPage from '../src/pages/signup-page';
 import LoginPage from './pages/login-page';
@@ -15,9 +15,9 @@ import UpdateVendor from './pages/vendors/update-vendors';
 import CustomerOrders from './pages/orders/display-orders';
 import ViewOrder from './pages/orders/view-order';
 import DisplayProductCategories from './pages/categories/display-categories';
+import DisplayInventory from './pages/inventory/display-inventory';
 
 function App() {
-
   return (
     <Router>
       <Routes>
@@ -32,10 +32,14 @@ function App() {
         <Route path="/updateVendor" element={<UpdateVendor />} />
         <Route path="/customerOrders" element={<CustomerOrders />} />
         <Route path="/viewOrder" element={<ViewOrder />} />
-        <Route path="/displayCategories" element={<DisplayProductCategories />} />
+        <Route
+          path="/displayCategories"
+          element={<DisplayProductCategories />}
+        />
+        <Route path="/displayInventory" element={<DisplayInventory />} />
       </Routes>
     </Router>
   );
 }
 
-export default App
+export default App;

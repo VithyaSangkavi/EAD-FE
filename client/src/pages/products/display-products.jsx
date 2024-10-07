@@ -28,18 +28,18 @@ const DisplayProducts = () => {
         }
     };
 
-    return (
-        <div>
-            <AdminHeader />
+  return (
+    <div>
+      <AdminHeader />
 
-            <Container className="mt-5">
-                <Button
-                    variant="info"
-                    className="top-right-button mb-4"
-                    onClick={() => navigate('/addProducts')}
-                >
-                    Add New Products
-                </Button>
+      <Container className="mt-5">
+        <Button
+          variant="info"
+          className="top-right-button mb-4"
+          onClick={() => navigate('/addProducts')}
+        >
+          Add New Products
+        </Button>
 
                 <br />
 

@@ -61,6 +61,10 @@ function LoginPage() {
         localStorage.setItem('token', response.data.token);
         console.log('Token:', response.data.token);
 
+        //save email in local storage
+        localStorage.setItem('userEmail', response.data.user.email);
+        console.log("email response: ", response.data.user.email);
+
         // Redirect user to the product display page
         navigate('/displayProducts');
       }

@@ -18,9 +18,17 @@ function DisplayVendors() {
     // Fetch vendors from the API
     const fetchVendors = async () => {
         try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
             const response = await axios.get('http://localhost:5296/api/admin/vendor/all-vendors', {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgwNjcyNjgsImV4cCI6MTcyODA3MDg2OCwiaWF0IjoxNzI4MDY3MjY4LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.QxkXQqkEwyxKBYv4RMQoxKMklCdQCJ6E3J0QJu-IYWg`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             setVendors(response.data); 
@@ -32,9 +40,17 @@ function DisplayVendors() {
     //Delete vendor
     const handleDelete = async (email) => {
         try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
             await axios.delete(`http://localhost:5296/api/admin/vendor/delete-vendor/${email}`, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgwNjcyNjgsImV4cCI6MTcyODA3MDg2OCwiaWF0IjoxNzI4MDY3MjY4LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.QxkXQqkEwyxKBYv4RMQoxKMklCdQCJ6E3J0QJu-IYWg`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 

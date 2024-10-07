@@ -5,11 +5,11 @@ import '../vendors/vendors.css';
 import '../../app.css';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 function CustomerOrders() {
-    const [orders, setOrders] = useState([]); // State to hold fetched orders
-    const navigate = useNavigate(); // Initialize useNavigate
+    const [orders, setOrders] = useState([]);
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         fetchOrders();
@@ -18,9 +18,17 @@ function CustomerOrders() {
     // Fetch Orders from the API
     const fetchOrders = async () => {
         try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
             const response = await axios.get('http://localhost:5296/api/Order/all-orders', {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgwNjUxOTYsImV4cCI6MTcyODA2ODc5NiwiaWF0IjoxNzI4MDY1MTk2LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.PEu6Gc6v3rK_TcjASLCo0ek_g_fBoeZjdgbP1wYOezE`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             setOrders(response.data); // Set orders in state

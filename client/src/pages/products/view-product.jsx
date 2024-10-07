@@ -68,9 +68,17 @@ function ViewProducts() {
     //Delete product
     const deleteProduct = async (id) => {
         try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
             await axios.delete(`http://localhost:5296/api/Product/delete-product/${id}`, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgyMzI3MzcsImV4cCI6MTcyODIzNjMzNywiaWF0IjoxNzI4MjMyNzM3LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.HLYXUPtudu6iURXYwrXy7BXex0zexumVeL3MrycCZUU`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
@@ -88,9 +96,17 @@ function ViewProducts() {
     // Fetch categories from the API
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:5296/api/Category/all-categories/fahmi@test.com', {
+            const token = localStorage.getItem('token');
+            const email = localStorage.getItem('userEmail');
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
+            const response = await axios.get(`http://localhost:5296/api/Category/all-categories/${email}`, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgyMzI3MzcsImV4cCI6MTcyODIzNjMzNywiaWF0IjoxNzI4MjMyNzM3LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.HLYXUPtudu6iURXYwrXy7BXex0zexumVeL3MrycCZUU`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             setCategories(response.data.categories);
@@ -113,9 +129,17 @@ function ViewProducts() {
         formData.append('addedByUserEmail', 'fahmi@test.com');
 
         try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
             const response = await axios.put(`http://localhost:5296/api/Product/update-product/${id}`, formData, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgyMzI3MzcsImV4cCI6MTcyODIzNjMzNywiaWF0IjoxNzI4MjMyNzM3LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.HLYXUPtudu6iURXYwrXy7BXex0zexumVeL3MrycCZUU`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -238,7 +262,7 @@ function ViewProducts() {
                                                 type="file"
                                                 accept="image/*"
                                                 name="productImageUrl"
-                                                value={formValues.productImage || "No image uploaded"}
+                                                // value={formValues.productImage || "No image uploaded"}
                                                 onChange={handleFileChange} 
                                             />
                                         </Form.Group>

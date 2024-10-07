@@ -16,15 +16,14 @@ import productHolder from '../../assets/order-pic.jpg';
 import './orders.css'
 
 function ViewOrder() {
-    const location = useLocation(); // Get location object
+    const location = useLocation(); 
     const order = location.state?.order;
     const navigate = useNavigate();
-    const [orderStatus, setOrderStatus] = useState('Pending'); // Initial order status
+    const [orderStatus, setOrderStatus] = useState('Pending'); 
 
     const handleStatusChange = (e) => {
         const newStatus = e.target.value;
         setOrderStatus(newStatus);
-        // Perform any additional actions, such as updating the status on the server
         console.log("Order status changed to:", newStatus);
     };
 

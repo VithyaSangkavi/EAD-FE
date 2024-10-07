@@ -16,9 +16,18 @@ function DisplayProductCategories() {
     // Fetch categories from the API
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:5296/api/Category/all-categories/fahmi@test.com', {
+            const token = localStorage.getItem('token');
+            const email = localStorage.getItem('userEmail');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
+            const response = await axios.get(`http://localhost:5296/api/Category/all-categories/${email}`, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgwNjUxOTYsImV4cCI6MTcyODA2ODc5NiwiaWF0IjoxNzI4MDY1MTk2LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.PEu6Gc6v3rK_TcjASLCo0ek_g_fBoeZjdgbP1wYOezE`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             setCategories(response.data.categories); 
@@ -30,10 +39,18 @@ function DisplayProductCategories() {
     // Update the status of a category by ID
     const handleStatusToggle = async (categoryId, currentStatus) => {
         try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
             // Call the API to update the category status
             await axios.put(`http://localhost:5296/api/Category/update-category-status/${categoryId}`, null, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgwNjUxOTYsImV4cCI6MTcyODA2ODc5NiwiaWF0IjoxNzI4MDY1MTk2LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.PEu6Gc6v3rK_TcjASLCo0ek_g_fBoeZjdgbP1wYOezE`
+                    'Authorization': `Bearer ${token}`
                 },
                 params: {
                     isActive: !currentStatus

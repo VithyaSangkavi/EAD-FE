@@ -11,7 +11,6 @@ import AddProducts from './pages/products/add-products';
 import ViewProducts from './pages/products/view-product';
 import DisplayVendors from './pages/vendors/display-vendors';
 import AddVendors from './pages/vendors/add-vendors';
-import UpdateVendor from './pages/vendors/update-vendors';
 import CustomerOrders from './pages/orders/display-orders';
 import ViewOrder from './pages/orders/view-order';
 import DisplayProductCategories from './pages/categories/display-categories';
@@ -29,7 +28,6 @@ function App() {
         <Route path="/viewProduct" element={<ViewProducts />} />
         <Route path="/displayVendors" element={<DisplayVendors />} />
         <Route path="/addVendors" element={<AddVendors />} />
-        <Route path="/updateVendor" element={<UpdateVendor />} />
         <Route path="/customerOrders" element={<CustomerOrders />} />
         <Route path="/viewOrder" element={<ViewOrder />} />
         <Route

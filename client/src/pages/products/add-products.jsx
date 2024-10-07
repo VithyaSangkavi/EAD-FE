@@ -21,7 +21,7 @@ function AddProducts() {
         price: 0,
         description: '',
         stockQuantity: 0,
-        category: '', 
+        category: '',
         productPicture: null,
         addedByUserEmail: ''
     });
@@ -41,17 +41,17 @@ function AddProducts() {
             reader.onloadend = () => {
                 setFormData({
                     ...formData,
-                    productPicture: reader.result, 
+                    productPicture: reader.result,
                 });
             };
-            reader.readAsDataURL(file); 
+            reader.readAsDataURL(file);
         }
     };
 
     const handleCategoryChange = (e) => {
         setFormData({
             ...formData,
-            category: e.target.value, 
+            category: e.target.value,
         });
     };
 
@@ -63,14 +63,23 @@ function AddProducts() {
         productData.append('price', formData.price);
         productData.append('description', formData.description);
         productData.append('stockQuantity', formData.stockQuantity);
-        productData.append('category', formData.category); 
+        productData.append('category', formData.category);
         productData.append('productPicture', formData.productPicture);
         productData.append('addedByUserEmail', 'fahmi@test.com');
 
         try {
+            // Get token from localStorage (make sure it's stored when the user logs in)
+            const token = localStorage.getItem('token');
+
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+                setError('No token found. Please log in.');
+                return;
+            }
+
             await axios.post('http://localhost:5296/api/Product/add-product', productData, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgyMzI3MzcsImV4cCI6MTcyODIzNjMzNywiaWF0IjoxNzI4MjMyNzM3LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.HLYXUPtudu6iURXYwrXy7BXex0zexumVeL3MrycCZUU`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -87,9 +96,21 @@ function AddProducts() {
     // Fetch categories from the API
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:5296/api/Category/all-categories/fahmi@test.com', {
+            // Get token from localStorage (make sure it's stored when the user logs in)
+            const token = localStorage.getItem('token');
+
+            //get email from local storage
+            const email = localStorage.getItem('userEmail');
+
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+                setError('No token found. Please log in.');
+                return;
+            }
+
+            const response = await axios.get(`http://localhost:5296/api/Category/all-categories/${email}`, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgyMzI3MzcsImV4cCI6MTcyODIzNjMzNywiaWF0IjoxNzI4MjMyNzM3LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.HLYXUPtudu6iURXYwrXy7BXex0zexumVeL3MrycCZUU`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             setCategories(response.data.categories);

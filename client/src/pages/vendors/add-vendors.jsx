@@ -2,8 +2,8 @@ import Button from 'react-bootstrap/Button';
 import AdminHeader from '../../components/admin-header';
 import { Form } from 'react-bootstrap';
 import CoverImage from '../../assets/background-image.jpg';
-import VendorImage from '../../assets/vendors.jpg'; 
-import React, { useState } from 'react'; 
+import VendorImage from '../../assets/vendors.jpg';
+import React, { useState } from 'react';
 import {
     MDBContainer,
     MDBRow,
@@ -38,12 +38,20 @@ function AddVendors() {
 
     //Add new vendor
     const addVendor = async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
 
         try {
+            const token = localStorage.getItem('token');
+
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+                setError('No token found. Please log in.');
+                return;
+            }
+
             await axios.post('http://localhost:5296/api/admin/vendor/create-vendor', vendorData, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjOWI1YjUwYi04ODBhLTQ3NjgtYjg1ZC1iZmQ1Njc0ZTAwOTciLCJ1bmlxdWVfbmFtZSI6IkZhaG1pTmV3MSIsImVtYWlsIjoiZmFobWlAdGVzdC5jb20iLCJyb2xlIjpbIlVzZXIiLCJDU1IiLCJBZG1pbiIsIlZlbmRvciJdLCJuYmYiOjE3MjgwNjUxOTYsImV4cCI6MTcyODA2ODc5NiwiaWF0IjoxNzI4MDY1MTk2LCJpc3MiOiJFQUQiLCJhdWQiOiJDdXN0b21lcnMifQ.PEu6Gc6v3rK_TcjASLCo0ek_g_fBoeZjdgbP1wYOezE`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             navigate('/displayVendors');
@@ -82,50 +90,50 @@ function AddVendors() {
                                     <Form onSubmit={addVendor}>
                                         <Form.Group className="mb-3" controlId="name">
                                             <Form.Label>User Name</Form.Label>
-                                            <Form.Control 
-                                                type="text" 
-                                                name="userName" 
-                                                value={vendorData.userName} 
+                                            <Form.Control
+                                                type="text"
+                                                name="userName"
+                                                value={vendorData.userName}
                                                 onChange={handleChange}
                                             />
                                         </Form.Group>
 
                                         <Form.Group className="mb-3" controlId="email">
                                             <Form.Label>Email Address</Form.Label>
-                                            <Form.Control 
-                                                type="email" 
+                                            <Form.Control
+                                                type="email"
                                                 name="email"
-                                                value={vendorData.email} 
+                                                value={vendorData.email}
                                                 onChange={handleChange}
                                             />
                                         </Form.Group>
 
                                         <Form.Group className="mb-3" controlId="password">
                                             <Form.Label>Password</Form.Label>
-                                            <Form.Control 
+                                            <Form.Control
                                                 type="password"
                                                 name="password"
-                                                value={vendorData.password} 
+                                                value={vendorData.password}
                                                 onChange={handleChange}
                                             />
                                         </Form.Group>
 
                                         <Form.Group className="mb-3" controlId="address">
                                             <Form.Label>Address</Form.Label>
-                                            <Form.Control 
-                                                type="text" 
+                                            <Form.Control
+                                                type="text"
                                                 name="address"
-                                                value={vendorData.address} 
+                                                value={vendorData.address}
                                                 onChange={handleChange}
                                             />
                                         </Form.Group>
 
                                         <Form.Group className="mb-3" controlId="phoneNumber">
                                             <Form.Label>Contact Number</Form.Label>
-                                            <Form.Control 
-                                                type="text" 
+                                            <Form.Control
+                                                type="text"
                                                 name="phoneNumber"
-                                                value={vendorData.phoneNumber} 
+                                                value={vendorData.phoneNumber}
                                                 onChange={handleChange}
                                             />
                                         </Form.Group>

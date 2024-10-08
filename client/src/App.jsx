@@ -15,6 +15,7 @@ import CustomerOrders from './pages/orders/display-orders';
 import ViewOrder from './pages/orders/view-order';
 import DisplayProductCategories from './pages/categories/display-categories';
 import DisplayInventory from './pages/inventory/display-inventory';
+import DisplayUsers from './pages/users/display-users';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           element={<DisplayProductCategories />}
         />
         <Route path="/displayInventory" element={<DisplayInventory />} />
+        <Route path="/displayUsers" element={<DisplayUsers />} />
       </Routes>
     </Router>
   );

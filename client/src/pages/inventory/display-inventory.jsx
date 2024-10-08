@@ -5,7 +5,7 @@ import AdminHeader from '../../components/admin-header';
 
 function InventoryManagement() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState('');
 
   // Fetch products from backend
@@ -18,7 +18,7 @@ function InventoryManagement() {
         // If no token is found, redirect to login or show an error
         if (!token) {
           setError('No token found. Please log in.');
-          setLoading(false);
+
           return;
         }
 
@@ -33,13 +33,11 @@ function InventoryManagement() {
         );
         console.log('Products Data:', response.data);
         setProducts(response.data);
-        setLoading(false);
       } catch (err) {
         console.error('Error fetching products:', err);
         setError(
           'Failed to load products. Please make sure you are authorized.'
         );
-        setLoading(false);
       }
     };
 
@@ -50,10 +48,6 @@ function InventoryManagement() {
     console.log('Removing stock for product with ID:', productId);
     // Here, you'd send a request to your API to remove stock from the inventory.
   };
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
   if (error) {
     return <p>{error}</p>;

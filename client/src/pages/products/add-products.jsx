@@ -55,6 +55,7 @@ function AddProducts() {
         });
     };
 
+    //Add new product
     const addProduct = async (e) => {
         e.preventDefault();
 

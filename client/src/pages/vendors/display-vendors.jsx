@@ -1,24 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button'; // Import Button from react-bootstrap
+import Button from 'react-bootstrap/Button';
 import AdminHeader from '../../components/admin-header';
 import './vendors.css';
-import '../../app.css'
+import '../../app.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function DisplayVendors() {
-    
     const navigate = useNavigate();
+    const [vendors, setVendors] = useState([]);
 
-    const handleUpdate = (id) => {
-        // Logic for updating vendor with the given id
-        console.log(`Update vendor with id: ${id}`);
-        navigate('/updateVendor')
+    useEffect(() => {
+        fetchVendors();
+    }, []);
+
+    // Fetch vendors from the API
+    const fetchVendors = async () => {
+        try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
+            const response = await axios.get('http://localhost:5296/api/admin/vendor/all-vendors', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setVendors(response.data); 
+        } catch (error) {
+            console.error('Error fetching vendors:', error);
+        }
     };
 
-    const handleDelete = (id) => {
-        // Logic for deleting vendor with the given id
-        console.log(`Delete vendor with id: ${id}`);
+    //Delete vendor
+    const handleDelete = async (email) => {
+        try {
+            const token = localStorage.getItem('token');
+        
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+              setError('No token found. Please log in.');
+              return;
+            }
+
+            await axios.delete(`http://localhost:5296/api/admin/vendor/delete-vendor/${email}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            fetchVendors();
+        } catch (error) {
+            console.error('Error deleting vendor:', email);
+        }
     };
 
     return (
@@ -32,56 +71,31 @@ function DisplayVendors() {
                 Add New Vendors
             </Button>
             <div style={{ width: '80%', overflowX: 'auto', margin: '100px auto' }}>
-                <h3>Vendors List</h3> <br />
+                <h3>Vendors List</h3><br />
                 <Table striped bordered hover style={{ width: '100%' }}>
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>User Name</th>
                             <th>Vendor Email</th>
-                            <th>Registration Number</th>
+                            <th>Address</th>
                             <th>Contact Number</th>
-                            <th>Actions</th> {/* New Actions column */}
+                            <th>Created Date</th>
+                            <th>Delete Vendor</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>12345</td>
-                            <td>123-456-7890</td>
-                            <td>
-                                <Button variant="outline-warning" onClick={() => handleUpdate(1)}>Update</Button> {/* Update button */}
-                                <Button variant="outline-danger" onClick={() => handleDelete(1)} style={{ marginLeft: '10px' }}>Delete</Button> {/* Delete button */}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>67890</td>
-                            <td>987-654-3210</td>
-                            <td>
-                                <Button variant="outline-warning" onClick={() => handleUpdate(2)}>Update</Button>
-                                <Button variant="outline-danger" onClick={() => handleDelete(2)} style={{ marginLeft: '10px' }}>Delete</Button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@twitter</td>
-                            <td>11111</td>
-                            <td>555-555-5555</td>
-                            <td>
-                                <Button variant="outline-warning" onClick={() => handleUpdate(3)}>Update</Button>
-                                <Button variant="outline-danger" onClick={() => handleDelete(3)} style={{ marginLeft: '10px' }}>Delete</Button>
-                            </td>
-                        </tr>
+                        {vendors.map(vendor => (
+                            <tr key={vendor.id}>
+                                <td>{vendor.userName}</td>
+                                <td>{vendor.email}</td>
+                                <td>{vendor.address}</td>
+                                <td>{vendor.phoneNumber}</td>
+                                <td>{new Date(vendor.createdOn).toLocaleDateString()}</td>
+                                <td>
+                                    <Button variant="outline-danger" onClick={() => handleDelete(vendor.email)}>Delete</Button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </Table>
             </div>

@@ -1,121 +1,67 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import './admin-header.css';
-import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
+import SideNav from './SideNav';
+import './admin-header.css';
 
 function AdminHeader() {
   const navigate = useNavigate();
-  const [lowStockCount, setLowStockCount] = useState(0); // Low stock count state
+  const [lowStockCount, setLowStockCount] = useState(0);
 
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:5296/api/Auth/logout');
-
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-
+      localStorage.removeItem('roles');
       navigate('/login');
     } catch (error) {
       console.error('Error during logout:', error);
     }
   };
 
-  // Function to fetch low stock alerts
   const fetchLowStockAlerts = async () => {
     try {
       const response = await axios.get(
         'http://localhost:5296/api/inventory/low-stock-alerts'
       );
-      const lowStockItems = response.data; // Assuming the API returns an array of low stock items
-      setLowStockCount(lowStockItems.length); // Set the count of low stock items
+      const lowStockItems = response.data;
+      setLowStockCount(lowStockItems.length);
     } catch (error) {
       console.error('Error fetching low stock alerts:', error);
     }
   };
 
   useEffect(() => {
-    fetchLowStockAlerts(); // Fetch low stock items on component mount
+    fetchLowStockAlerts();
   }, []);
 
   return (
-    <>
+    <div className="layout">
+      {/* Sidebar */}
+      <SideNav />
+
+      {/* Top Navbar */}
       <Navbar
         className="custom-navbar"
         bg="info"
         data-bs-theme="light"
         fixed="top"
       >
-        <Container>
+        <div className="container-fluid">
+          {/* Empty Nav to push content to the right */}
           <Nav className="me-auto">
-            <Nav.Link
-              as={NavLink}
-              to="/"
-              exact
-              className="nav-link"
-              activeClassName="active"
-            >
-              Home
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayProducts"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Products
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayCategories"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Categories
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/customerOrders"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Orders
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayVendors"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Vendors
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayInventory"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Inventory
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayUsers"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Manage Users
-            </Nav.Link>
+            <span className="navbar-brand">LOGO</span>
           </Nav>
 
+          {/* Right side: Notifications and Logout */}
           <Nav className="ms-auto d-flex align-items-center">
-            {/* Notification Bell Icon with Badge */}
             <Nav.Link
               onClick={fetchLowStockAlerts}
               className="position-relative"
@@ -132,15 +78,14 @@ function AdminHeader() {
               )}
             </Nav.Link>
 
-            {/* Logout Button */}
             <Button variant="danger" onClick={handleLogout} className="ms-3">
               <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
               Logout
             </Button>
           </Nav>
-        </Container>
+        </div>
       </Navbar>
-    </>
+    </div>
   );
 }
 

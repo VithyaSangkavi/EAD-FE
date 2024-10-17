@@ -70,7 +70,7 @@ function ManageUsers() {
     <div>
       <AdminHeader />
       <div className="container mt-5">
-        <h2>Manage Users</h2>
+        <h2 style={{ marginTop: '100px' }}>Manage Users</h2>
         <ToastContainer />{' '}
         {/* Toast notifications for success/error messages */}
         <Table striped bordered hover>

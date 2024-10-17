@@ -59,14 +59,33 @@ function LoginPage() {
 
         // Save the token in local storage
         localStorage.setItem('token', response.data.token);
-        console.log('Token:', response.data.token);
-
-        //save email in local storage
         localStorage.setItem('userEmail', response.data.user.email);
-        console.log("email response: ", response.data.user.email);
 
-        // Redirect user to the product display page
-        navigate('/displayProducts');
+        // Save user roles in local storage
+        const userRoles = response.data.user.roles;
+        localStorage.setItem('roles', JSON.stringify(userRoles));
+
+        // Determine the highest-priority role for redirection
+        const rolePriority = ['Admin', 'CSR', 'Vendor', 'User']; // Define the role priority
+
+        // Find the highest-priority role that the user has
+        const userPrimaryRole = rolePriority.find((role) =>
+          userRoles.includes(role)
+        );
+
+        console.log('Token:', response.data.token);
+        console.log('Email:', response.data.user.email);
+        console.log('Roles:', userRoles);
+        console.log('Primary Role:', userPrimaryRole);
+
+        // Redirect user based on their primary role
+        if (userPrimaryRole === 'Admin' || userPrimaryRole === 'CSR') {
+          navigate('/admin-dashboard'); // Redirect to Admin Dashboard
+        } else if (userPrimaryRole === 'Vendor') {
+          navigate('/vendor-dashboard'); // Redirect to Vendor Dashboard
+        } else {
+          navigate('/displayProducts'); // Default redirection
+        }
       }
     } catch (error) {
       // Show error toast notification

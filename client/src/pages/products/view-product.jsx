@@ -115,6 +115,7 @@ function ViewProducts() {
         }
     };
 
+    //Update product
     const updateProduct = async (id, event) => {
         event.preventDefault(); // Prevent form submission behavior
 
@@ -151,6 +152,7 @@ function ViewProducts() {
         }
     };
 
+    //Image uploading
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -175,7 +177,7 @@ function ViewProducts() {
             <MDBContainer fluid>
                 <MDBRow className='d-flex justify-content-center align-items-center h-100'>
                     <MDBCol col='12'>
-                        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '800px' }}>
+                        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '800px', marginTop: '20px' }}>
                             <MDBCardBody className='p-3 w-100 d-flex flex-row'>
                                 <MDBCol md='6' className="d-flex justify-content-center align-items-center">
                                     {/* Product Image Section */}

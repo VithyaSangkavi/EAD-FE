@@ -1,13 +1,14 @@
 import Button from 'react-bootstrap/Button';
+import AdminHeader from '../../components/admin-header';
 import { Form } from 'react-bootstrap';
 import CoverImage from '../../assets/background-image.jpg';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MDBContainer,
   MDBRow,
   MDBCol,
   MDBCard,
-  MDBCardBody,
+  MDBCardBody
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -22,7 +23,7 @@ function AddProducts() {
     stockQuantity: 0,
     category: '',
     productPicture: null,
-    addedByUserEmail: '',
+    addedByUserEmail: ''
   });
 
   const handleInputChange = (e) => {
@@ -54,7 +55,11 @@ function AddProducts() {
     });
   };
 
+  //Add new product
   const addProduct = async (e) => {
+
+    const email = localStorage.getItem('userEmail');
+
     e.preventDefault();
 
     const productData = new FormData();
@@ -64,7 +69,7 @@ function AddProducts() {
     productData.append('stockQuantity', formData.stockQuantity);
     productData.append('category', formData.category);
     productData.append('productPicture', formData.productPicture);
-    productData.append('addedByUserEmail', 'fahmi@test.com');
+    productData.append('addedByUserEmail', email);
 
     try {
       // Get token from localStorage (make sure it's stored when the user logs in)
@@ -76,16 +81,12 @@ function AddProducts() {
         return;
       }
 
-      await axios.post(
-        'http://localhost:5296/api/Product/add-product',
-        productData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
+      await axios.post('http://localhost:5296/api/Product/add-product', productData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      );
+      });
       navigate('/displayProducts');
     } catch (error) {
       console.error('Error adding product:', error);
@@ -111,14 +112,11 @@ function AddProducts() {
         return;
       }
 
-      const response = await axios.get(
-        `http://localhost:5296/api/Category/all-categories/${email}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await axios.get(`http://localhost:5296/api/Category/all-categories/${email}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      );
+      });
       setCategories(response.data.categories);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -127,54 +125,37 @@ function AddProducts() {
 
   return (
     <div
-      className="full-screen"
+      className='full-screen'
       style={{ backgroundImage: `url(${CoverImage})` }}
     >
+      <AdminHeader />
+
       <MDBContainer fluid>
-        <MDBRow className="d-flex justify-content-center align-items-center h-100">
-          <MDBCol col="12">
-            <MDBCard
-              className="bg-white my-5 mx-auto"
-              style={{ borderRadius: '1rem', maxWidth: '500px' }}
-            >
-              <MDBCardBody className="p-3 w-100 d-flex flex-column">
+        <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+          <MDBCol col='12'>
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
+              <MDBCardBody className='p-3 w-100 d-flex flex-column'>
                 <h4 className="form-heading">Add New Product</h4>
 
                 <Form onSubmit={addProduct}>
                   <Form.Group className="mb-3" controlId="name">
                     <Form.Label>Product Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                    />
+                    <Form.Control type="text" value={formData.name} onChange={handleInputChange} />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="price">
                     <Form.Label>Price</Form.Label>
-                    <Form.Control
-                      type="number"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                    />
+                    <Form.Control type="number" value={formData.price} onChange={handleInputChange} />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="description">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                    />
+                    <Form.Control type="text" value={formData.description} onChange={handleInputChange} />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="stockQuantity">
                     <Form.Label>Quantity</Form.Label>
-                    <Form.Control
-                      type="number"
-                      value={formData.stockQuantity}
-                      onChange={handleInputChange}
-                    />
+                    <Form.Control type="number" value={formData.stockQuantity} onChange={handleInputChange} />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="category">
@@ -185,31 +166,22 @@ function AddProducts() {
                       onChange={handleCategoryChange}
                     >
                       <option value="">Select a category</option>
-                      {categories.map(
-                        (category) =>
-                          category.isActive && (
-                            <option key={category.id} value={category.id}>
-                              {`${category.id} - ${category.name}`}
-                            </option>
-                          )
-                      )}
+                      {categories.map(category => (
+                        category.isActive && (
+                          <option key={category.id} value={category.id}>
+                            {`${category.id} - ${category.name}`}
+                          </option>
+                        )
+                      ))}
                     </Form.Control>
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="productPicture">
                     <Form.Label>Product Image</Form.Label>
-                    <Form.Control
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                    />
+                    <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
                   </Form.Group>
 
-                  <Button
-                    variant="outline-success"
-                    className="mt-4 w-100"
-                    type="submit"
-                  >
+                  <Button variant="outline-success" className="mt-4 w-100" type="submit">
                     Add Product
                   </Button>
                 </Form>

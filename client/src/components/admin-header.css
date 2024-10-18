@@ -38,3 +38,8 @@
 .navbar-right {
   margin-left: auto;
 }
+
+.navbar-small{
+  font-size: 16px;
+  margin-top: 8px;
+}

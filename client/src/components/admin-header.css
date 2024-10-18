@@ -5,6 +5,7 @@
   width: 100%; /* Full width */
   z-index: 1000; /* Keep navbar above other content */
   background-color: #17a2b8; /* Customize the navbar background */
+  height: 65px;
 }
 
 .custom-navbar .nav-link {
@@ -39,7 +40,11 @@
   margin-left: auto;
 }
 
-.navbar-small{
+.navbar-small {
   font-size: 16px;
   margin-top: 8px;
+}
+.notification-text {
+  font-weight: bold; /* Make notification items bold */
+  font-size: 20px;
 }

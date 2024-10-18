@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Modal } from 'react-bootstrap'; // Import Modal
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminHeader from '../../components/admin-header';
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [selectedUser, setSelectedUser] = useState(null); // To store the selected user for toggle
 
   // Fetch all users on component mount
   useEffect(() => {
@@ -32,12 +34,12 @@ function ManageUsers() {
   }, []);
 
   // Handle the activation/deactivation of users
-  const toggleUserState = async (email) => {
+  const toggleUserState = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.patch(
         'http://localhost:5296/api/UserManagement/update-user-state',
-        { Email: email },
+        { Email: selectedUser.email },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -52,11 +54,12 @@ function ManageUsers() {
 
       // Refresh the user list after updating
       const updatedUsers = users.map((user) =>
-        user.email === email
+        user.email === selectedUser.email
           ? { ...user, state: user.state === 'active' ? 'inactive' : 'active' }
           : user
       );
       setUsers(updatedUsers);
+      setShowModal(false); // Close the modal after update
     } catch (error) {
       console.error('Error updating user state:', error);
       toast.error('Failed to update user state', {
@@ -66,13 +69,28 @@ function ManageUsers() {
     }
   };
 
+  // Open the confirmation modal
+  const openConfirmationModal = (user) => {
+    setSelectedUser(user); // Set the user to be toggled
+    setShowModal(true); // Show the modal
+  };
+
+  // Close the modal without any action
+  const handleCloseModal = () => {
+    setShowModal(false); // Close modal without making changes
+    setSelectedUser(null); // Clear selected user
+  };
+
   return (
     <div>
       <AdminHeader />
       <div className="container mt-5">
-        <h2 style={{ marginTop: '100px' }}>Manage Users</h2>
-        <ToastContainer />{' '}
+        <h2 className="text-left pb-3" style={{ paddingBottom: '20px' }}>
+          Manage Users
+        </h2>
+        <ToastContainer />
         {/* Toast notifications for success/error messages */}
+
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -90,8 +108,9 @@ function ManageUsers() {
                 <td>{user.state === 'active' ? 'Active' : 'Inactive'}</td>
                 <td>
                   <Button
+                    className="button-width"
                     variant={user.state === 'active' ? 'danger' : 'success'}
-                    onClick={() => toggleUserState(user.email)}
+                    onClick={() => openConfirmationModal(user)} // Open modal on click
                   >
                     {user.state === 'active' ? 'Deactivate' : 'Activate'}
                   </Button>
@@ -101,6 +120,32 @@ function ManageUsers() {
           </tbody>
         </Table>
       </div>
+
+      {/* Modal for confirmation */}
+      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Action</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedUser ? (
+            <>
+              Are you sure you want to{' '}
+              {selectedUser.state === 'active' ? 'deactivate' : 'activate'}{' '}
+              {selectedUser.userName}?
+            </>
+          ) : (
+            'Loading...'
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={toggleUserState}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

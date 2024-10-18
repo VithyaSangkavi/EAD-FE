@@ -86,7 +86,7 @@ function ViewOrder() {
 
                                     <h5>-----------------------------------------------</h5>
 
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <h5>Change Order Status: </h5>
                                         <select id="orderStatus" className="form-control" onChange={(e) => handleStatusChange(e)}>
                                             <option value="Pending">Pending</option>
@@ -95,10 +95,10 @@ function ViewOrder() {
                                             <option value="Delivered">Delivered</option>
                                             <option value="Cancelled">Cancelled</option>
                                         </select>
-                                    </div>
+                                    </div> */}
                                     <br />
                                     <Button variant="outline-success" className="mt-4 w-100" type="submit" onClick={() => navigate('/customerOrders')}>
-                                        Confirm Order Status
+                                        Change Order Status
                                     </Button>
                                 </MDBCol>
                             </MDBCardBody>

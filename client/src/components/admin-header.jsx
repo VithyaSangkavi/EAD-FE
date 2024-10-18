@@ -57,7 +57,8 @@ function AdminHeader() {
         <div className="container-fluid">
           {/* Empty Nav to push content to the right */}
           <Nav className="me-auto">
-            <span className="navbar-brand">LOGO</span>
+            <span className="navbar-brand">ShopX</span>
+            <span className="navbar-small">-----  Made Your Shopping Easy  -----</span>
           </Nav>
 
           {/* Right side: Notifications and Logout */}

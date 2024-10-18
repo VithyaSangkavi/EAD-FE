@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Card, Row, Col } from 'react-bootstrap';
+import { Container, Button, Card, Row, Col, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import './products.css';
@@ -9,6 +9,7 @@ import axios from 'axios';
 const DisplayProducts = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
     fetchProducts();
@@ -37,6 +38,8 @@ const DisplayProducts = () => {
       setProducts(response.data); // Store the fetched products in state
     } catch (error) {
       console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false); // Set loading to false once the data is fetched
     }
   };
 
@@ -52,47 +55,56 @@ const DisplayProducts = () => {
 
       <br />
 
-      <Row xs={1} sm={2} md={3} lg={5} className="g-4">
-        {products.length > 0 ? (
-          products.map((product) => (
-            <Col key={product.id}>
-              <Card style={{ width: '100%', top: '50px' }}>
-                <Card.Img
-                  variant="top"
-                  src={
-                    product.productPicture
-                      ? product.productPicture
-                      : productHolder
-                  }
-                  alt={product.name}
-                  style={{ height: '200px', objectFit: 'cover' }}
-                />
-                <Card.Body>
-                  <Card.Title>{product.name}</Card.Title>
-                  <Card.Text>{product.description}</Card.Text>
-                  <Card.Text>
-                    <strong>Price: </strong>Rs.{product.price}.00
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Stock: </strong>
-                    {product.stockQuantity}
-                  </Card.Text>
-                  <Button
-                    variant="outline-info"
-                    onClick={() =>
-                      navigate(`/viewProduct`, { state: { product } })
+      {/* Show a loading spinner while products are being fetched */}
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center">
+          <Spinner animation="border" role="status" variant="info">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      ) : (
+        <Row xs={1} sm={2} md={3} lg={5} className="g-4">
+          {products.length > 0 ? (
+            products.map((product) => (
+              <Col key={product.id}>
+                <Card style={{ width: '100%', top: '50px' }}>
+                  <Card.Img
+                    variant="top"
+                    src={
+                      product.productPicture
+                        ? product.productPicture
+                        : productHolder
                     }
-                  >
-                    View Product
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))
-        ) : (
-          <p>No products available</p>
-        )}
-      </Row>
+                    alt={product.name}
+                    style={{ height: '200px', objectFit: 'cover' }}
+                  />
+                  <Card.Body>
+                    <Card.Title>{product.name}</Card.Title>
+                    <Card.Text>{product.description}</Card.Text>
+                    <Card.Text>
+                      <strong>Price: </strong>Rs.{product.price}.00
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>Stock: </strong>
+                      {product.stockQuantity}
+                    </Card.Text>
+                    <Button
+                      variant="outline-info"
+                      onClick={() =>
+                        navigate(`/viewProduct`, { state: { product } })
+                      }
+                    >
+                      View Product
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))
+          ) : (
+            <p>No products available</p>
+          )}
+        </Row>
+      )}
     </Container>
   );
 };

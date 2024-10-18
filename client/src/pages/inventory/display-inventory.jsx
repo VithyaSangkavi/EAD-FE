@@ -1,36 +1,45 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, Button, Alert } from 'react-bootstrap';
 import CoverImage from '../../assets/background-image.jpg';
 
 function InventoryManagement() {
   const [products, setProducts] = useState([]);
-  const [isVendor, setIsVendor] = useState(false); // Track if the user is a Vendor
+  // const [isVendor, setIsVendor] = useState(false); // Track if the user is a Vendor
+  // const [isAdmin, setIsAdmin] = useState(false); // Track if the user is an Admin
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const token = localStorage.getItem('token');
         const userEmail = localStorage.getItem('userEmail');
-        const roles = JSON.parse(localStorage.getItem('roles')) || [];
+        const storedRoles = JSON.parse(localStorage.getItem('roles')) || [];
 
         if (!token) {
           // Handle case where the user is not logged in
           return;
         }
 
-        // Check if the logged-in user is a vendor
-        const isVendorUser = roles.includes('Vendor');
-        setIsVendor(isVendorUser);
-
         let apiUrl = '';
-
-        // Use vendor-specific API if the user is a Vendor, otherwise use admin API
-        if (isVendorUser) {
+        if (storedRoles.includes('Admin') || storedRoles.includes('CSR')) {
+          apiUrl = 'http://localhost:5296/api/Inventory/admin/products';
+        } else if (storedRoles.includes('Vendor')) {
           apiUrl = `http://localhost:5296/api/Inventory/user/${userEmail}/products`;
         } else {
-          apiUrl = 'http://localhost:5296/api/Inventory/admin/products';
+          return;
         }
+
+        // let apiUrl = '';
+
+        // // Use vendor-specific API if the user is a Vendor, otherwise use admin API
+        // if (isVendorUser) {
+        //   apiUrl = `http://localhost:5296/api/Inventory/user/${userEmail}/products`;
+        // } else if (isAdminUser) {
+        //   apiUrl = 'http://localhost:5296/api/Inventory/admin/products';
+        // } else {
+        //   // Handle other roles, if necessary
+        //   return;
+        // }
 
         // Make request with Authorization header
         const response = await axios.get(apiUrl, {
@@ -60,13 +69,9 @@ function InventoryManagement() {
       className="content-screen"
       style={{ backgroundImage: `url(${CoverImage})` }}
     >
-      {products && Object.keys(products).length > 0 ? (
+      {products.length > 0 ? (
         <div className="container mt-5">
-          <h2 style={{ marginTop: '100px' }}>
-            {isVendor
-              ? 'Vendor Inventory Management'
-              : 'Admin Inventory Management'}
-          </h2>
+          <h2 style={{ marginTop: '100px' }}>Inventory Management</h2>
 
           <Table striped bordered hover>
             <thead>
@@ -79,33 +84,38 @@ function InventoryManagement() {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(products).map(([categoryName, categoryInfo]) =>
-                categoryInfo.products.map((product) => (
-                  <tr key={product.Id}>
-                    <td>{product.Name || 'No Name'}</td>{' '}
-                    {/* Display product name */}
-                    <td>{categoryName}</td> {/* Display category name */}
-                    <td>{product.StockQuantity || 'N/A'}</td>{' '}
-                    {/* Display stock quantity */}
-                    <td>
-                      {product.StockQuantity < 10 ? (
-                        <Alert variant="danger">Low Stock</Alert>
-                      ) : (
-                        'In Stock'
-                      )}
-                    </td>
-                    <td>
-                      <Button
-                        variant="warning"
-                        onClick={() => handleRemoveStock(product.Id)}
-                        disabled={product.StockQuantity === 0}
-                      >
-                        Remove Stock
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              )}
+              {products.map((userProduct) => (
+                <React.Fragment key={userProduct.user}>
+                  {Object.entries(userProduct.categories).map(
+                    ([categoryName, categoryInfo]) =>
+                      categoryInfo.products.map((product) => (
+                        <tr key={product.id}>
+                          <td>{product.name || 'No Name'}</td>{' '}
+                          {/* Display product name */}
+                          <td>{categoryName}</td> {/* Display category name */}
+                          <td>{product.stockQuantity || 'N/A'}</td>{' '}
+                          {/* Display stock quantity */}
+                          <td>
+                            {product.stockQuantity < 10 ? (
+                              <Alert variant="danger">Low Stock</Alert>
+                            ) : (
+                              'In Stock'
+                            )}
+                          </td>
+                          <td>
+                            <Button
+                              variant="warning"
+                              onClick={() => handleRemoveStock(product.id)}
+                              disabled={product.stockQuantity === 0}
+                            >
+                              Remove Stock
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
+                  )}
+                </React.Fragment>
+              ))}
             </tbody>
           </Table>
         </div>

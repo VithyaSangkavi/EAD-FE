@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from '../src/pages/landing-page';
 import './App.css';
@@ -15,26 +14,117 @@ import CustomerOrders from './pages/orders/display-orders';
 import ViewOrder from './pages/orders/view-order';
 import DisplayProductCategories from './pages/categories/display-categories';
 import DisplayInventory from './pages/inventory/display-inventory';
+import DisplayUsers from './pages/users/display-users';
+import AdminDashboard from './pages/dashboards/admin-dashboard';
+import VendorDashboard from './pages/dashboards/vendor-dashboard';
+import MainLayout from './layouts/MainLayout'; // Import MainLayout
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Routes without MainLayout */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/displayProducts" element={<DisplayProducts />} />
-        <Route path="/addProducts" element={<AddProducts />} />
-        <Route path="/viewProduct" element={<ViewProducts />} />
-        <Route path="/displayVendors" element={<DisplayVendors />} />
-        <Route path="/addVendors" element={<AddVendors />} />
-        <Route path="/customerOrders" element={<CustomerOrders />} />
-        <Route path="/viewOrder" element={<ViewOrder />} />
+
+        {/* Routes with MainLayout */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <MainLayout>
+              <AdminDashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/vendor-dashboard"
+          element={
+            <MainLayout>
+              <VendorDashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/displayProducts"
+          element={
+            <MainLayout>
+              <DisplayProducts />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/addProducts"
+          element={
+            <MainLayout>
+              <AddProducts />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/viewProduct"
+          element={
+            <MainLayout>
+              <ViewProducts />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/displayVendors"
+          element={
+            <MainLayout>
+              <DisplayVendors />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/addVendors"
+          element={
+            <MainLayout>
+              <AddVendors />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/customerOrders"
+          element={
+            <MainLayout>
+              <CustomerOrders />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/viewOrder"
+          element={
+            <MainLayout>
+              <ViewOrder />
+            </MainLayout>
+          }
+        />
         <Route
           path="/displayCategories"
-          element={<DisplayProductCategories />}
+          element={
+            <MainLayout>
+              <DisplayProductCategories />
+            </MainLayout>
+          }
         />
-        <Route path="/displayInventory" element={<DisplayInventory />} />
+        <Route
+          path="/displayInventory"
+          element={
+            <MainLayout>
+              <DisplayInventory />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/displayUsers"
+          element={
+            <MainLayout>
+              <DisplayUsers />
+            </MainLayout>
+          }
+        />
       </Routes>
     </Router>
   );

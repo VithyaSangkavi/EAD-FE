@@ -12,6 +12,7 @@ import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify'; // Import Toast
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
+import CoverImage from '../assets/background-image.jpg';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -38,12 +39,40 @@ function SignupPage() {
     });
   };
 
+  const validatePassword = (password) => {
+    const hasDigit = /\d/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNonAlphanumeric = /[^a-zA-Z0-9]/.test(password);
+
+    if (!hasDigit) {
+      setErrorMessage("Passwords must have at least one digit ('0'-'9').");
+      return false;
+    }
+    if (!hasUpperCase) {
+      setErrorMessage("Passwords must have at least one uppercase ('A'-'Z').");
+      return false;
+    }
+    if (!hasNonAlphanumeric) {
+      setErrorMessage(
+        'Passwords must have at least one non-alphanumeric character.'
+      );
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Check if password and confirmPassword match
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage('Passwords do not match!');
       return;
+    }
+
+    // Check if the password meets the criteria
+    if (!validatePassword(formData.password)) {
+      return; // Exit if password validation fails
     }
 
     // Check if Address and Phone Number are provided
@@ -103,11 +132,19 @@ function SignupPage() {
   return (
     <div
       className="full-screen"
-      style={{ backgroundImage: `url(../assets/background-image.jpg)` }}
+      style={{
+        backgroundImage: `url(${CoverImage})`,
+        backgroundSize: 'cover', // Ensure background covers the entire area
+        backgroundPosition: 'center',
+        height: '130vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
     >
       <MDBContainer fluid>
         <ToastContainer />
-        <MDBRow className="d-flex justify-content-center align-items-center h-100">
+        <MDBRow className="d-flex justify-content-center align-items-center h-200">
           <MDBCol col="12">
             <MDBCard
               className="bg-white my-5 mx-auto"
@@ -206,6 +243,10 @@ function SignupPage() {
                     Create Account
                   </Button>
                 </Form>
+                <br />
+                <div className="d-flex justify-content-between mx-4 mb-4">
+                  <a href="/login">Already have an account? Sign In</a>
+                </div>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>

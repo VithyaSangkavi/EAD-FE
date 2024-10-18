@@ -1,0 +1,33 @@
+.side-nav {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 250px;
+  height: calc(100% - 56px);
+  background-color: #bbdefb;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.side-nav .nav-link {
+  padding: 15px 20px;
+  display: block;
+  color: white;
+  font-weight: bold;
+}
+
+.side-nav .nav-link:hover,
+.side-nav .nav-link.active {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.side-nav .nav-link.active {
+  font-weight: bold;
+}
+
+.main-content {
+  margin-left: 250px; /* Leave space for the sidebar */
+  padding: 0px;
+  background-color: #f7f7f7;
+  min-height: calc(100vh - 56px); /* Full height minus the navbar */
+}

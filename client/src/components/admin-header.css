@@ -1,15 +1,40 @@
-/* admin-header.css */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  z-index: 1000; /* Keep navbar above other content */
+  background-color: #17a2b8; /* Customize the navbar background */
+}
 
 .custom-navbar .nav-link {
-    color: white; /* Default text color */
-    transition: color 0.3s ease; /* Smooth transition for color change */
+  color: white; /* Default text color */
+  transition: color 0.3s ease; /* Smooth transition for color change */
 }
 
 .custom-navbar .nav-link:hover {
-    color: black; 
+  color: black;
 }
 
 .custom-navbar .nav-link.active {
-    color: black; /* Color when link is selected (active) */
-    font-weight: bold; /* Make active link bold */
+  color: black; /* Color when link is selected (active) */
+  font-weight: bold; /* Make active link bold */
+}
+
+.custom-navbar .container {
+  width: 100%;
+}
+
+.custom-navbar .btn {
+  color: white;
+  border: 1px solid white;
+}
+
+.custom-navbar .btn:hover {
+  background-color: #d9534f;
+  color: white;
+}
+
+.navbar-right {
+  margin-left: auto;
 }

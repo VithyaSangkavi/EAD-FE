@@ -1,0 +1,31 @@
+.main-layout {
+  display: flex;
+  flex-direction: column; /* Ensure the layout is column-based */
+  height: 200vh; /* Make the layout take up the full screen */
+}
+
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Full-width navbar */
+  z-index: 1000; /* Ensure it's on top */
+}
+
+.content {
+  display: flex;
+  margin-top: 30px; /* Ensure the content doesn't overlap with the navbar */
+  height: calc(100vh - 56px); /* Take the full remaining height */
+}
+
+.side-nav {
+  width: 250px; /* Fixed width for sidebar */
+  background-color: #052b4b;
+  height: 100%; /* Full height */
+}
+
+.main-content {
+  flex-grow: 1; /* Take the remaining space */
+  padding: 0px;
+  overflow-y: auto;
+}

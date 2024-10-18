@@ -1,101 +1,91 @@
-//import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
+import { useEffect, useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
-import './admin-header.css';
-import { NavLink } from 'react-router-dom';
+import Badge from 'react-bootstrap/Badge';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
+import SideNav from './SideNav';
+import './admin-header.css';
 
 function AdminHeader() {
   const navigate = useNavigate();
+  const [lowStockCount, setLowStockCount] = useState(0);
 
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:5296/api/Auth/logout');
-
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-
+      localStorage.removeItem('roles');
       navigate('/login');
     } catch (error) {
       console.error('Error during logout:', error);
     }
   };
 
+  const fetchLowStockAlerts = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:5296/api/inventory/low-stock-alerts'
+      );
+      const lowStockItems = response.data;
+      setLowStockCount(lowStockItems.length);
+    } catch (error) {
+      console.error('Error fetching low stock alerts:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLowStockAlerts();
+  }, []);
+
   return (
-    <>
+    <div className="layout">
+      {/* Sidebar */}
+      <SideNav />
+
+      {/* Top Navbar */}
       <Navbar
         className="custom-navbar"
         bg="info"
         data-bs-theme="light"
         fixed="top"
       >
-        <Container>
+        <div className="container-fluid">
+          {/* Empty Nav to push content to the right */}
           <Nav className="me-auto">
-            <Nav.Link
-              as={NavLink}
-              to="/"
-              exact
-              className="nav-link"
-              activeClassName="active"
-            >
-              Home
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayProducts"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Products
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayCategories"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Categories
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/customerOrders"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Orders
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayVendors"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Vendors
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/displayInventory"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Inventory
-            </Nav.Link>
+            <span className="navbar-brand">LOGO</span>
           </Nav>
 
-          <Nav className="ms-auto d-flex align-items-right">
-            <Button variant="danger" onClick={handleLogout}>
+          {/* Right side: Notifications and Logout */}
+          <Nav className="ms-auto d-flex align-items-center">
+            <Nav.Link
+              onClick={fetchLowStockAlerts}
+              className="position-relative"
+            >
+              <FontAwesomeIcon icon={faBell} size="lg" />
+              {lowStockCount > 0 && (
+                <Badge
+                  bg="danger"
+                  pill
+                  className="position-absolute top-0 start-100 translate-middle p-2"
+                >
+                  {lowStockCount}
+                </Badge>
+              )}
+            </Nav.Link>
+
+            <Button variant="danger" onClick={handleLogout} className="ms-3">
               <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
               Logout
             </Button>
           </Nav>
-        </Container>
+        </div>
       </Navbar>
-    </>
+    </div>
   );
 }
 

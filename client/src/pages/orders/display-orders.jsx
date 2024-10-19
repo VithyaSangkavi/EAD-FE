@@ -58,7 +58,7 @@ function CustomerOrders() {
                     </Spinner>
                 </div>
             ) : (
-                <div style={{ width: '80%', overflowX: 'auto', margin: '100px auto' }}>
+                <div style={{ width: '80%', overflowX: 'auto', margin: '50px auto' }}>
                     <h3>Customer Orders</h3> <br />
                     <Table striped bordered hover style={{ width: '100%' }}>
                         <thead>

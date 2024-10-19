@@ -16,16 +16,43 @@ import productHolder from '../../assets/order-pic.jpg';
 import './orders.css'
 
 function ViewOrder() {
-    const location = useLocation(); 
+    const location = useLocation();
     const order = location.state?.order;
     const navigate = useNavigate();
-    const [orderStatus, setOrderStatus] = useState('Pending'); 
+    const [orderStatus, setOrderStatus] = useState('Pending');
 
     //Status Change
-    const handleStatusChange = (e) => {
-        const newStatus = e.target.value;
-        setOrderStatus(newStatus);
-        console.log("Order status changed to:", newStatus);
+    const handleStatusChange = async (e) => {
+        try {
+            const token = localStorage.getItem('token');
+
+            // If no token is found, redirect to login or show an error
+            if (!token) {
+                setError('No token found. Please log in.');
+                return;
+            }
+
+            // Call the API to update the category status
+            await axios.put(`http://localhost:5296/api/Purchase/update-shipping-status/${categoryId}`, null, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                params: {
+                    isActive: !currentStatus
+                }
+            });
+
+            // Update the categories list locally after the status change
+            setCategories((prevCategories) =>
+                prevCategories.map((category) =>
+                    category.id === categoryId
+                        ? { ...category, isActive: !currentStatus }
+                        : category
+                )
+            );
+        } catch (error) {
+            console.error('Error updating category status:', error);
+        }
     };
 
     return (
@@ -82,6 +109,11 @@ function ViewOrder() {
                                         </p>
                                         <p>Purchase Status: {order.purchaseStatus}</p>
                                         <p>Payment Status: {order.paymentStatus}</p>
+
+
+                                        <Button variant="outline-success" className="mt-4 w-100" type="submit" onClick={() => handleStatusChange()}>
+                                            Change Order Status
+                                        </Button>
                                     </div>
 
                                     <h5>-----------------------------------------------</h5>
@@ -97,9 +129,6 @@ function ViewOrder() {
                                         </select>
                                     </div> */}
                                     <br />
-                                    <Button variant="outline-success" className="mt-4 w-100" type="submit" onClick={() => navigate('/customerOrders')}>
-                                        Change Order Status
-                                    </Button>
                                 </MDBCol>
                             </MDBCardBody>
                         </MDBCard>

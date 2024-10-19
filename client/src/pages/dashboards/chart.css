@@ -1,0 +1,15 @@
+.chart-container {
+    background-color: #f0f4f7; /* Add background color for the container */
+    padding: 20px;
+  }
+  
+  .chart-wrapper {
+    width: 60%; /* Adjust the width of the chart div */
+    height: 400px; /* Adjust the height */
+    margin: 0 auto; /* Center the chart */
+    background-color: #ffffff; /* Background color for the chart wrapper */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for visual appeal */
+  }
+  

@@ -5,6 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 import axios from 'axios';
+import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
 import SideNav from './SideNav';
@@ -57,7 +58,10 @@ function AdminHeader() {
         <div className="container-fluid">
           {/* Empty Nav to push content to the right */}
           <Nav className="me-auto">
-            <span className="navbar-brand">ShopX</span>
+            <span className="navbar-brand">
+              <FontAwesomeIcon style={{marginRight: '10px'}} icon={faShoppingBasket} /> ShopX
+            </span>
+
             <span className="navbar-small">-----  Made Your Shopping Easy  -----</span>
           </Nav>
 

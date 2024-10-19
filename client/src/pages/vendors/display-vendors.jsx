@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import Spinner from 'react-bootstrap/Spinner'; // Import Spinner
+import Spinner from 'react-bootstrap/Spinner';
+import Modal from 'react-bootstrap/Modal'; 
 import AdminHeader from '../../components/admin-header';
 import './vendors.css';
 import '../../app.css';
@@ -11,18 +12,18 @@ import axios from 'axios';
 function DisplayVendors() {
     const navigate = useNavigate();
     const [vendors, setVendors] = useState([]);
-    const [loading, setLoading] = useState(true); // Add loading state
+    const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false); // State for modal visibility
+    const [selectedVendorEmail, setSelectedVendorEmail] = useState(null); // Store vendor email for deletion
 
     useEffect(() => {
         fetchVendors();
     }, []);
 
-    // Fetch vendors from the API
     const fetchVendors = async () => {
         try {
             const token = localStorage.getItem('token');
 
-            // If no token is found, redirect to login or show an error
             if (!token) {
                 setError('No token found. Please log in.');
                 return;
@@ -37,31 +38,40 @@ function DisplayVendors() {
         } catch (error) {
             console.error('Error fetching vendors:', error);
         } finally {
-            setLoading(false); // Set loading to false once data is fetched
+            setLoading(false);
         }
     };
 
-    // Delete vendor
-    const handleDelete = async (email) => {
+    const handleDelete = async () => {
         try {
             const token = localStorage.getItem('token');
 
-            // If no token is found, redirect to login or show an error
             if (!token) {
                 setError('No token found. Please log in.');
                 return;
             }
 
-            await axios.delete(`http://localhost:5296/api/admin/vendor/delete-vendor/${email}`, {
+            await axios.delete(`http://localhost:5296/api/admin/vendor/delete-vendor/${selectedVendorEmail}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
 
             fetchVendors();
+            handleCloseModal(); // Close the modal after deletion
         } catch (error) {
-            console.error('Error deleting vendor:', email);
+            console.error('Error deleting vendor:', selectedVendorEmail);
         }
+    };
+
+    const handleShowModal = (email) => {
+        setSelectedVendorEmail(email);
+        setShowModal(true); // Show confirmation modal
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false); // Hide modal
+        setSelectedVendorEmail(null); // Clear the selected vendor
     };
 
     return (
@@ -75,7 +85,6 @@ function DisplayVendors() {
                 Add New Vendors
             </Button>
 
-            {/* Display Spinner while loading */}
             {loading ? (
                 <div className="d-flex justify-content-center align-items-center mt-5">
                     <Spinner animation="border" role="status" variant="info">
@@ -83,7 +92,7 @@ function DisplayVendors() {
                     </Spinner>
                 </div>
             ) : (
-                <div style={{ width: '80%', overflowX: 'auto', margin: '100px auto' }}>
+                <div style={{ width: '80%', overflowX: 'auto', margin: '50px auto' }}>
                     <h3>Vendors List</h3><br />
                     <Table striped bordered hover style={{ width: '100%' }}>
                         <thead>
@@ -105,7 +114,7 @@ function DisplayVendors() {
                                     <td>{vendor.phoneNumber}</td>
                                     <td>{new Date(vendor.createdOn).toLocaleDateString()}</td>
                                     <td>
-                                        <Button variant="outline-danger" onClick={() => handleDelete(vendor.email)}>
+                                        <Button variant="outline-danger" onClick={() => handleShowModal(vendor.email)}>
                                             Delete
                                         </Button>
                                     </td>
@@ -115,6 +124,24 @@ function DisplayVendors() {
                     </Table>
                 </div>
             )}
+
+            {/* Confirmation Modal */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete this vendor?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

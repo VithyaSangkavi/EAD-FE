@@ -53,8 +53,6 @@ const DisplayProducts = () => {
         Add New Products
       </Button>
 
-      <br />
-
       {/* Show a loading spinner while products are being fetched */}
       {loading ? (
         <div className="d-flex justify-content-center align-items-center">

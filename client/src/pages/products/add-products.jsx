@@ -125,14 +125,14 @@ function AddProducts() {
 
   return (
     <div
-      className='full-screen'
+      className='full-screen-add'
       style={{ backgroundImage: `url(${CoverImage})` }}
     >
       <AdminHeader />
 
       <MDBContainer fluid>
         <MDBRow className='d-flex justify-content-center align-items-center h-100'>
-          <MDBCol col='12'>
+          <MDBCol>
             <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
               <MDBCardBody className='p-3 w-100 d-flex flex-column'>
                 <h4 className="form-heading">Add New Product</h4>

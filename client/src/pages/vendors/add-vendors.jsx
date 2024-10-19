@@ -63,7 +63,7 @@ function AddVendors() {
 
     return (
         <div
-            className='full-screen'
+            className='full-screen-add'
             style={{ backgroundImage: `url(${CoverImage})` }}
         >
             <AdminHeader />

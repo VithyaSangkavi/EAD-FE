@@ -30,4 +30,5 @@
   padding: 0px;
   background-color: #f8f2fc;
   min-height: calc(100vh - 56px); /* Full height minus the navbar */
+  margin-top: 30px;
 }

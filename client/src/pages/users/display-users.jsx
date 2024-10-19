@@ -4,6 +4,7 @@ import { Table, Button, Modal } from 'react-bootstrap'; // Import Modal
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminHeader from '../../components/admin-header';
+import './ManageUsers.css'; // Import custom CSS
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -85,14 +86,14 @@ function ManageUsers() {
     <div>
       <AdminHeader />
       <div className="container mt-5">
-        <h2 className="text-left pb-3" style={{ paddingBottom: '20px' }}>
+        <h2 className="text-center pb-3" style={{ paddingBottom: '20px' }}>
           Manage Users
         </h2>
         <ToastContainer />
         {/* Toast notifications for success/error messages */}
 
-        <Table striped bordered hover>
-          <thead>
+        <Table striped bordered hover responsive className="custom-table">
+          <thead className="table-header">
             <tr>
               <th>Email</th>
               <th>Username</th>
@@ -105,10 +106,20 @@ function ManageUsers() {
               <tr key={user.email}>
                 <td>{user.email}</td>
                 <td>{user.userName}</td>
-                <td>{user.state === 'active' ? 'Active' : 'Inactive'}</td>
+                <td>
+                  <span
+                    className={
+                      user.state === 'active'
+                        ? 'badge badge-active'
+                        : 'badge badge-inactive'
+                    }
+                  >
+                    {user.state === 'active' ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
                 <td>
                   <Button
-                    className="button-width"
+                    className="action-button"
                     variant={user.state === 'active' ? 'danger' : 'success'}
                     onClick={() => openConfirmationModal(user)} // Open modal on click
                   >

@@ -13,7 +13,7 @@
 
 .content-screen {
   width: 85vw;
-  height: 100vh;
+  height: 120vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,6 +60,10 @@
 
 .fadeInDown {
   animation-name: fadeInDown;
+}
+
+.button-width {
+  width: 120px;
 }
 
 @keyframes fadeInDown {

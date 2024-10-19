@@ -13,7 +13,8 @@ import AddVendors from './pages/vendors/add-vendors';
 import CustomerOrders from './pages/orders/display-orders';
 import ViewOrder from './pages/orders/view-order';
 import DisplayProductCategories from './pages/categories/display-categories';
-import DisplayInventory from './pages/inventory/display-inventory';
+import DisplayAdminInventory from './pages/inventory/display-admin-inventory';
+import DisplayVendorInventory from './pages/inventory/display-vendor-inventory';
 import DisplayUsers from './pages/users/display-users';
 import AdminDashboard from './pages/dashboards/admin-dashboard';
 import VendorDashboard from './pages/dashboards/vendor-dashboard';
@@ -110,10 +111,18 @@ function App() {
           }
         />
         <Route
-          path="/displayInventory"
+          path="/displayAdminInventory"
           element={
             <MainLayout>
-              <DisplayInventory />
+              <DisplayAdminInventory />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/displayVendorInventory"
+          element={
+            <MainLayout>
+              <DisplayVendorInventory />
             </MainLayout>
           }
         />

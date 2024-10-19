@@ -6,6 +6,7 @@ import './side-nav.css';
 function SideNav() {
   const [homeLabel, setHomeLabel] = useState('Home');
   const [homeRoute, setHomeRoute] = useState('/');
+  const [inventoryRoute, setInventoryRoute] = useState('/');
   const [isAdminOrCSR, setIsAdminOrCSR] = useState(false); // Track Admin or CSR role
 
   const determineHomeLabelAndRoute = () => {
@@ -14,10 +15,12 @@ function SideNav() {
     if (storedRoles.includes('Admin') || storedRoles.includes('CSR')) {
       setHomeLabel('Admin Dashboard');
       setHomeRoute('/admin-dashboard');
+      setInventoryRoute('/displayAdminInventory');
       setIsAdminOrCSR(true);
     } else if (storedRoles.includes('Vendor')) {
       setHomeLabel('Vendor Dashboard');
       setHomeRoute('/vendor-dashboard');
+      setInventoryRoute('/displayVendorInventory');
     } else {
       setHomeLabel('Home');
       setHomeRoute('/');
@@ -89,7 +92,7 @@ function SideNav() {
         </Nav.Link>
         <Nav.Link
           as={NavLink}
-          to="/displayInventory"
+          to={inventoryRoute}
           className="nav-link"
           activeClassName="active"
         >

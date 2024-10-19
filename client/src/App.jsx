@@ -19,6 +19,7 @@ import DisplayUsers from './pages/users/display-users';
 import AdminDashboard from './pages/dashboards/admin-dashboard';
 import VendorDashboard from './pages/dashboards/vendor-dashboard';
 import MainLayout from './layouts/MainLayout'; // Import MainLayout
+import DisplayPurchase from './pages/purchase/display-purchase';
 
 function App() {
   return (
@@ -131,6 +132,15 @@ function App() {
           element={
             <MainLayout>
               <DisplayUsers />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/displayPurchases"
+          element={
+            <MainLayout>
+              <DisplayPurchase />
             </MainLayout>
           }
         />

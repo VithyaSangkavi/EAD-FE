@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Card, Row, Col, Spinner } from 'react-bootstrap';
+import { Container, Button, Card, Row, Col, Spinner, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-
 import './products.css';
 import productHolder from '../../assets/product-holder.png';
 import axios from 'axios';
@@ -9,24 +8,33 @@ import axios from 'axios';
 const DisplayProducts = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [categories, setCategories] = useState([]); // State to store categories
+  const [selectedCategory, setSelectedCategory] = useState('all'); // Default selected category is "all"
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(''); // State for error message
 
   useEffect(() => {
-    fetchProducts();
+    fetchCategories(); // Fetch categories on component mount
+    fetchProducts(); // Fetch all products initially
   }, []);
 
-  // Fetch products from the API
+  useEffect(() => {
+    if (selectedCategory !== 'all') {
+      fetchProductsByCategory(); // Fetch products by category when a specific category is selected
+    } else {
+      fetchProducts(); // Fetch all products if "all" is selected
+    }
+  }, [selectedCategory]);
+
+  // Fetch all products
   const fetchProducts = async () => {
     try {
-      // Get token from localStorage (make sure it's stored when the user logs in)
       const token = localStorage.getItem('token');
-
-      // If no token is found, redirect to login or show an error
       if (!token) {
-        setError('No token found. Please log in.');
         return;
       }
-
+      setLoading(true);
+      setErrorMessage(''); // Clear any previous errors
       const response = await axios.get(
         'http://localhost:5296/api/Product/all-products',
         {
@@ -35,11 +43,65 @@ const DisplayProducts = () => {
           },
         }
       );
-      setProducts(response.data); // Store the fetched products in state
+      setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
-      setLoading(false); // Set loading to false once the data is fetched
+      setLoading(false);
+    }
+  };
+
+  // Fetch products by selected category
+  const fetchProductsByCategory = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return;
+      }
+      setLoading(true);
+      setErrorMessage(''); // Clear any previous errors
+      const response = await axios.get(
+        `http://localhost:5296/api/Product/products-by-category/${selectedCategory}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.length === 0) {
+        setErrorMessage(`No products found for category: ${selectedCategory}`);
+      }
+
+      setProducts(response.data);
+    } catch (error) {
+      console.error(`Error fetching products by category: ${selectedCategory}`, error);
+      setErrorMessage('No products available for this category');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch available categories
+  const fetchCategories = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const email = localStorage.getItem('userEmail');
+
+      // If no token is found, redirect to login or show an error
+      if (!token) {
+        setError('No token found. Please log in.');
+        return;
+      }
+
+      const response = await axios.get(`http://localhost:5296/api/Category/all-categories/${email}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setCategories(response.data.categories);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
     }
   };
 
@@ -53,6 +115,23 @@ const DisplayProducts = () => {
         Add New Products
       </Button>
 
+      {/* Category Filter */}
+      <Form.Group controlId="categorySelect" className="mb-4">
+        <Form.Label>Select Category</Form.Label>
+        <Form.Control
+          as="select"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="all">All Categories</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </Form.Control>
+      </Form.Group>
+
       {/* Show a loading spinner while products are being fetched */}
       {loading ? (
         <div className="d-flex justify-content-center align-items-center">
@@ -60,6 +139,8 @@ const DisplayProducts = () => {
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>
+      ) : errorMessage ? (
+        <p>{errorMessage}</p>
       ) : (
         <Row xs={1} sm={2} md={3} lg={5} className="g-4">
           {products.length > 0 ? (
@@ -99,7 +180,7 @@ const DisplayProducts = () => {
               </Col>
             ))
           ) : (
-            <p>No products available</p>
+            <p>No products to display for the selected category.</p>
           )}
         </Row>
       )}

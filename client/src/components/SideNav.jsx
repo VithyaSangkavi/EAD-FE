@@ -92,6 +92,15 @@ function SideNav() {
         </Nav.Link>
         <Nav.Link
           as={NavLink}
+          to="/displayPurchases"
+          className="nav-link"
+          activeClassName="active"
+        >
+          Manage Purchases
+        </Nav.Link>
+
+        <Nav.Link
+          as={NavLink}
           to={inventoryRoute}
           className="nav-link"
           activeClassName="active"

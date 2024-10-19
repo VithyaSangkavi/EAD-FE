@@ -57,7 +57,7 @@ function ViewOrder() {
 
     return (
         <div
-            className='full-screen'
+            className='full-screen-add'
             style={{ backgroundImage: `url(${CoverImage})` }}
         >
             <AdminHeader />
@@ -68,7 +68,7 @@ function ViewOrder() {
                         <CloseButton
                             onClick={() => navigate('/customerOrders')}
                             className="custom-close-button"
-                            style={{ position: 'absolute', top: '140px', right: '380px', zIndex: 10 }}
+                            style={{ position: 'absolute', top: '80px', right: '50px'}}
                         />
                         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '800px' }}>
                             <MDBCardBody className='p-3 w-100 d-flex flex-row'>
@@ -110,10 +110,10 @@ function ViewOrder() {
                                         <p>Purchase Status: {order.purchaseStatus}</p>
                                         <p>Payment Status: {order.paymentStatus}</p>
 
-
+{/* 
                                         <Button variant="outline-success" className="mt-4 w-100" type="submit" onClick={() => handleStatusChange()}>
                                             Change Order Status
-                                        </Button>
+                                        </Button> */}
                                     </div>
 
                                     <h5>-----------------------------------------------</h5>

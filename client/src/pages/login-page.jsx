@@ -79,8 +79,10 @@ function LoginPage() {
         console.log('Primary Role:', userPrimaryRole);
 
         // Redirect user based on their primary role
-        if (userPrimaryRole === 'Admin' || userPrimaryRole === 'CSR') {
+        if (userPrimaryRole === 'Admin') {
           navigate('/admin-dashboard'); // Redirect to Admin Dashboard
+        } else if (userPrimaryRole === 'CSR') {
+          navigate('/csr-dashboard'); // Redirect to Vendor Dashboard
         } else if (userPrimaryRole === 'Vendor') {
           navigate('/vendor-dashboard'); // Redirect to Vendor Dashboard
         } else {

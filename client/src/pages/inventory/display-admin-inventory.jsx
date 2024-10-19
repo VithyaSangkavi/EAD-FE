@@ -3,12 +3,14 @@ import axios from 'axios';
 import { Table, Button, Alert, Spinner, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './AdminInventoryManagement.css'; // Import custom CSS
 
 function AdminInventoryManagement() {
-  const [products, setProducts] = useState([]); // Ensure products is initialized as an array
+  const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [showLowStockOnly, setShowLowStockOnly] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -27,7 +29,7 @@ function AdminInventoryManagement() {
           }
         );
 
-        setProducts(response.data); // Ensure the response is an array or properly structured object
+        setProducts(response.data);
         setIsLoading(false);
       } catch (err) {
         console.error('Error fetching products:', err);
@@ -101,6 +103,29 @@ function AdminInventoryManagement() {
     setSelectedProductId(null);
   };
 
+  const getFilteredProducts = () => {
+    if (!showLowStockOnly) {
+      return products;
+    }
+
+    return products.map((userProduct) => ({
+      ...userProduct,
+      categories: Object.fromEntries(
+        Object.entries(userProduct.categories).map(
+          ([categoryName, categoryInfo]) => [
+            categoryName,
+            {
+              ...categoryInfo,
+              products: categoryInfo.products.filter(
+                (product) => product.stockQuantity < 10
+              ),
+            },
+          ]
+        )
+      ),
+    }));
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center mt-5">
@@ -110,6 +135,8 @@ function AdminInventoryManagement() {
       </div>
     );
   }
+
+  const filteredProducts = getFilteredProducts();
 
   return (
     <div>
@@ -128,14 +155,28 @@ function AdminInventoryManagement() {
           </Button>
         </Modal.Footer>
       </Modal>
+
       {products.length > 0 ? (
         <div className="container mt-5">
           <h2 style={{ marginTop: '100px', paddingBottom: '20px' }}>
             Admin Inventory Management
           </h2>
 
-          <Table striped bordered hover>
-            <thead>
+          {/* Row for button */}
+          <div className="d-flex justify-content-between mb-3">
+            <Button
+              variant="primary"
+              onClick={() => setShowLowStockOnly(!showLowStockOnly)}
+              className="ms-auto"
+            >
+              {showLowStockOnly
+                ? 'Show All Products'
+                : 'Show Low Stock Products'}
+            </Button>
+          </div>
+
+          <Table responsive bordered hover className="custom-table">
+            <thead className="custom-thead">
               <tr>
                 <th>Product Name</th>
                 <th>Category</th>
@@ -145,7 +186,7 @@ function AdminInventoryManagement() {
               </tr>
             </thead>
             <tbody>
-              {products.map((userProduct) =>
+              {filteredProducts.map((userProduct) =>
                 Object.entries(userProduct.categories).map(
                   ([categoryName, categoryInfo]) =>
                     categoryInfo.products.map((product) => (

@@ -3,12 +3,14 @@ import axios from 'axios';
 import { Table, Button, Alert, Spinner, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './VendorInventoryManagement.css'; // Import custom CSS
 
 function VendorInventoryManagement() {
   const [products, setProducts] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [lowStockFilter, setLowStockFilter] = useState(false); // State to toggle low stock filter
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -92,6 +94,11 @@ function VendorInventoryManagement() {
     setSelectedProductId(null);
   };
 
+  // Filter low stock products
+  const filterLowStockProducts = () => {
+    setLowStockFilter(!lowStockFilter);
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center mt-5">
@@ -101,6 +108,18 @@ function VendorInventoryManagement() {
       </div>
     );
   }
+
+  const filteredProducts = lowStockFilter
+    ? Object.entries(products).reduce((acc, [categoryName, categoryInfo]) => {
+        const lowStockProducts = categoryInfo.products.filter(
+          (product) => product.stockQuantity < 10
+        );
+        if (lowStockProducts.length > 0) {
+          acc[categoryName] = { ...categoryInfo, products: lowStockProducts };
+        }
+        return acc;
+      }, {})
+    : products;
 
   return (
     <div>
@@ -119,12 +138,22 @@ function VendorInventoryManagement() {
           </Button>
         </Modal.Footer>
       </Modal>
+
       {products && Object.keys(products).length > 0 ? (
         <div className="container mt-5">
-          <h2 style={{ marginTop: '100px' }}>Vendor Inventory Management</h2>
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="table-title">Vendor Inventory Management</h2>
+            <Button
+              variant="primary"
+              onClick={filterLowStockProducts}
+              className="filter-btn"
+            >
+              {lowStockFilter ? 'Show All Products' : 'Filter Low Stock'}
+            </Button>
+          </div>
 
-          <Table striped bordered hover>
-            <thead>
+          <Table className="custom-table" responsive>
+            <thead className="custom-table-header">
               <tr>
                 <th>Product Name</th>
                 <th>Category</th>
@@ -134,30 +163,31 @@ function VendorInventoryManagement() {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(products).map(([categoryName, categoryInfo]) =>
-                categoryInfo.products.map((product) => (
-                  <tr key={product.id}>
-                    <td>{product.name || 'No Name'}</td>
-                    <td>{categoryName}</td>
-                    <td>{product.stockQuantity || 'N/A'}</td>
-                    <td>
-                      {product.stockQuantity < 10 ? (
-                        <Alert variant="danger">Low Stock</Alert>
-                      ) : (
-                        'In Stock'
-                      )}
-                    </td>
-                    <td>
-                      <Button
-                        variant="warning"
-                        onClick={() => handleRemoveStock(product.id)}
-                        disabled={product.stockQuantity === 0}
-                      >
-                        Remove Stock
-                      </Button>
-                    </td>
-                  </tr>
-                ))
+              {Object.entries(filteredProducts).map(
+                ([categoryName, categoryInfo]) =>
+                  categoryInfo.products.map((product) => (
+                    <tr key={product.id}>
+                      <td>{product.name || 'No Name'}</td>
+                      <td>{categoryName}</td>
+                      <td>{product.stockQuantity || 'N/A'}</td>
+                      <td>
+                        {product.stockQuantity < 10 ? (
+                          <Alert variant="danger">Low Stock</Alert>
+                        ) : (
+                          'In Stock'
+                        )}
+                      </td>
+                      <td>
+                        <Button
+                          variant="warning"
+                          onClick={() => handleRemoveStock(product.id)}
+                          disabled={product.stockQuantity === 0}
+                        >
+                          Remove Stock
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
               )}
             </tbody>
           </Table>

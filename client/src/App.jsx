@@ -18,6 +18,7 @@ import DisplayVendorInventory from './pages/inventory/display-vendor-inventory';
 import DisplayUsers from './pages/users/display-users';
 import AdminDashboard from './pages/dashboards/admin-dashboard';
 import VendorDashboard from './pages/dashboards/vendor-dashboard';
+import CsrDashboard from './pages/dashboards/csr-dashboard';
 import MainLayout from './layouts/MainLayout'; // Import MainLayout
 import DisplayPurchase from './pages/purchase/display-purchase';
 
@@ -44,6 +45,14 @@ function App() {
           element={
             <MainLayout>
               <VendorDashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/csr-dashboard"
+          element={
+            <MainLayout>
+              <CsrDashboard />
             </MainLayout>
           }
         />

@@ -1,0 +1,54 @@
+.container {
+  max-width: 1200px;
+}
+
+.table-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.filter-btn {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.custom-table {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 30px;
+}
+
+.custom-table-header {
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.custom-table td,
+.custom-table th {
+  padding: 15px;
+  text-align: center;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.custom-table td button {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  font-weight: bold;
+}

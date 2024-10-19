@@ -7,16 +7,22 @@ function SideNav() {
   const [homeLabel, setHomeLabel] = useState('Home');
   const [homeRoute, setHomeRoute] = useState('/');
   const [inventoryRoute, setInventoryRoute] = useState('/');
-  const [isAdminOrCSR, setIsAdminOrCSR] = useState(false); // Track Admin or CSR role
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isCsr, setIsCsr] = useState(false);
 
   const determineHomeLabelAndRoute = () => {
     const storedRoles = JSON.parse(localStorage.getItem('roles')) || [];
 
-    if (storedRoles.includes('Admin') || storedRoles.includes('CSR')) {
+    if (storedRoles.includes('Admin')) {
       setHomeLabel('Admin Dashboard');
       setHomeRoute('/admin-dashboard');
       setInventoryRoute('/displayAdminInventory');
-      setIsAdminOrCSR(true);
+      setIsAdmin(true);
+    } else if (storedRoles.includes('CSR')) {
+      setHomeLabel('CSR Dashboard');
+      setHomeRoute('/csr-dashboard');
+      setInventoryRoute('/manageOrderStatus'); // Set route for Manage Order Status
+      setIsCsr(true);
     } else if (storedRoles.includes('Vendor')) {
       setHomeLabel('Vendor Dashboard');
       setHomeRoute('/vendor-dashboard');
@@ -43,17 +49,19 @@ function SideNav() {
         >
           {homeLabel}
         </Nav.Link>
-        {/* Show Manage Products for all roles */}
-        <Nav.Link
-          as={NavLink}
-          to="/displayProducts"
-          className="nav-link"
-          activeClassName="active"
-        >
-          Manage Products
-        </Nav.Link>
-        {/* Show Categories and Vendors only for Admin/CSR */}
-        {isAdminOrCSR && (
+        {/* Show Manage Products for all roles except CSR */}
+        {!isCsr && (
+          <Nav.Link
+            as={NavLink}
+            to="/displayProducts"
+            className="nav-link"
+            activeClassName="active"
+          >
+            Manage Products
+          </Nav.Link>
+        )}
+        {/* Show Categories and Vendors only for Admin */}
+        {isAdmin && (
           <>
             <Nav.Link
               as={NavLink}
@@ -79,34 +87,59 @@ function SideNav() {
             >
               Manage Users
             </Nav.Link>
+
+            <Nav.Link
+              as={NavLink}
+              to="/displayPurchases"
+              className="nav-link"
+              activeClassName="active"
+            >
+              Manage Purchases
+            </Nav.Link>
           </>
         )}
-        {/* Show Orders and Inventory for both Admin, CSR, and Vendor */}
-        <Nav.Link
-          as={NavLink}
-          to="/customerOrders"
-          className="nav-link"
-          activeClassName="active"
-        >
-          Manage Orders
-        </Nav.Link>
-        <Nav.Link
-          as={NavLink}
-          to="/displayPurchases"
-          className="nav-link"
-          activeClassName="active"
-        >
-          Manage Purchases
-        </Nav.Link>
-
-        <Nav.Link
-          as={NavLink}
-          to={inventoryRoute}
-          className="nav-link"
-          activeClassName="active"
-        >
-          Manage Inventory
-        </Nav.Link>
+        {/* Show CSR-specific tabs: Manage Users and Manage Order Status */}
+        {isCsr && (
+          <>
+            <Nav.Link
+              as={NavLink}
+              to="/displayUsers"
+              className="nav-link"
+              activeClassName="active"
+            >
+              Manage Users
+            </Nav.Link>
+            <Nav.Link
+              as={NavLink}
+              to="/manageOrderStatus" // New tab for CSR to manage order status
+              className="nav-link"
+              activeClassName="active"
+            >
+              Manage Order Status
+            </Nav.Link>
+          </>
+        )}
+        {/* Show Orders and Inventory for Admin, CSR, and Vendor */}
+        {!isCsr && (
+          <Nav.Link
+            as={NavLink}
+            to="/customerOrders"
+            className="nav-link"
+            activeClassName="active"
+          >
+            Manage Orders
+          </Nav.Link>
+        )}
+        {!isCsr && (
+          <Nav.Link
+            as={NavLink}
+            to={inventoryRoute}
+            className="nav-link"
+            activeClassName="active"
+          >
+            Manage Inventory
+          </Nav.Link>
+        )}
       </Nav>
     </div>
   );
